@@ -28,6 +28,7 @@ export const Navbar = () => {
 
   const renderShowSearchResult = () => {
     const data = searchData || [];
+
     return (
       <div className="absolute top-8 bg-[#222831] rounded-b-md w-full shadow-lg shadow-white/5 overflow-hidden z-50 px-2">
         {data.map(({ id, image, title, releaseDate }) => {
@@ -52,7 +53,7 @@ export const Navbar = () => {
             </div>
           );
         })}
-        {searchData !== undefined && (
+        {data.length > 0 && (
           <p className="text-center mt-2 mb-4 cursor-pointer text-sm font-medium text-zinc-200">
             View All
           </p>
