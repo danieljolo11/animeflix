@@ -7,7 +7,7 @@ export const Navbar = () => {
   const [searchForm, setSearchForm] = useState("");
 
   useEffect(() => {
-    const delay = searchForm ? 1000 : 0
+    const delay = searchForm ? 1000 : 0;
     const delayinsearch = setTimeout(() => {
       getSearchResult();
     }, delay);
@@ -30,7 +30,11 @@ export const Navbar = () => {
     const data = searchData || [];
 
     return (
-      <div className="absolute top-8 bg-[#222831] rounded-b-md w-full shadow-lg shadow-white/5 overflow-hidden z-50 px-2">
+      <div
+        className={`${
+          data.length > 0 ? "h-[30rem]" : "h-0"
+        } absolute top-8 bg-[#222831] transition-[height] duration-500 rounded-b-md w-full shadow-lg shadow-white/5 overflow-hidden z-50 px-2`}
+      >
         {data.map(({ id, image, title, releaseDate }) => {
           return (
             <div
@@ -43,7 +47,7 @@ export const Navbar = () => {
                 src={image ?? null}
               />
               <div className="flex flex-col">
-                <span className="text-zinc-200 text-sm font-normal">
+                <span className="text-zinc-200 text-sm font-normal line-clamp-2">
                   {title}
                 </span>
                 <span className="text-zinc-400 text-sm font-normal">
