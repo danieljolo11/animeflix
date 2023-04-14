@@ -1,6 +1,5 @@
 import React, {
   createContext,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -20,9 +19,9 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     getApiDatas(); // eslint-disable-next-line
-  }, []);
+  }, [currentPage]);
 
-  const getApiDatas = useCallback(async () => {
+  const getApiDatas = async () => {
     // API ROUTE
     const recenturl =
       "https://api.consumet.org/anime/gogoanime/recent-episodes";
@@ -46,11 +45,12 @@ export const AuthProvider = ({ children }) => {
     // API DATA'S
     const { data: recentData, status: recentStatus } = recentApiData.value;
     const { data: topairData, status: topairStatus } = topAiringApiData.value;
+    console.log("recentData:", recentData);
 
     // API STATE
     setRecentAnimeData(recentStatus === 200 ? recentData : []);
     setTopAiringData(topairStatus === 200 ? topairData.results : []);
-  }, [currentPage]);
+  };
 
   const memoedValue = useMemo(
     () => ({
