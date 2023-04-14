@@ -15,5 +15,5 @@
 }
 
 .searchinput {
-  @apply block w-[30rem] bg-[#222831] rounded-r-md py-2 text-zinc-500 outline-none px-2 text-sm font-normal placeholder:text-xs;
+  @apply block w-[30rem] bg-[#222831] rounded-r-md py-2 text-zinc-300 outline-none px-2 text-sm font-normal placeholder:text-xs;
 }

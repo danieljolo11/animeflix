@@ -4,20 +4,61 @@ import { FiSearch } from "react-icons/fi";
 
 export const Navbar = () => {
   const [searchData, setSearchData] = useState([]);
-  const [searchForm, setSearchForm] = useState("spy x family");
+  const [searchForm, setSearchForm] = useState("");
 
   useEffect(() => {
-    getSearchResult();
-  });
+    const delay = searchForm ? 1000 : 0
+    const delayinsearch = setTimeout(() => {
+      getSearchResult();
+    }, delay);
+    return () => clearTimeout(delayinsearch); // eslint-disable-next-line
+  }, [searchForm]);
 
   const getSearchResult = async () => {
     const searchresulturl = `https://api.consumet.org/anime/gogoanime/${searchForm}`;
-    await axios.get(searchresulturl).then(({data, status}) => {
+    await axios.get(searchresulturl).then(({ data, status }) => {
       if (status === 200) {
-        // setSearchData(data)
+        const splicedata = data.documentation
+          ? data.results
+          : data.results.splice(0, 5);
+        setSearchData(splicedata);
       }
-      console.log("result: ", data);
     });
+  };
+
+  const renderShowSearchResult = () => {
+    const data = searchData || [];
+    return (
+      <div className="absolute top-8 bg-[#222831] rounded-b-md w-full shadow-lg shadow-white/5 overflow-hidden z-50 px-2">
+        {data.map(({ id, image, title, releaseDate }) => {
+          return (
+            <div
+              key={id}
+              className="flex flex-row gap-2 py-2 mt-2 cursor-pointer"
+            >
+              <img
+                className="h-16 w-16"
+                alt="searchImage"
+                src={image ?? null}
+              />
+              <div className="flex flex-col">
+                <span className="text-zinc-200 text-sm font-normal">
+                  {title}
+                </span>
+                <span className="text-zinc-400 text-sm font-normal">
+                  {releaseDate}
+                </span>
+              </div>
+            </div>
+          );
+        })}
+        {searchData !== undefined && (
+          <p className="text-center mt-2 mb-4 cursor-pointer text-sm font-medium text-zinc-200">
+            View All
+          </p>
+        )}
+      </div>
+    );
   };
 
   return (
@@ -26,7 +67,7 @@ export const Navbar = () => {
         <div className="text-xl font-semibold text-[#EEEEEE]">Animeflix</div>
         <div className="flex flex-row items-center relative">
           <div className="bg-[#222831] py-2.5 rounded-l-md pl-2">
-            <FiSearch className="text-zinc-500" />
+            <FiSearch className="text-zinc-300" />
           </div>
           <input
             type="text"
@@ -37,13 +78,9 @@ export const Navbar = () => {
             placeholder="Search anime"
             value={searchForm}
             onChange={(e) => setSearchForm(e.target.value)}
-            // onBlur={(e) => setSearchForm(e.target.value)}
+            onBlur={() => setSearchForm("")}
           />
-          <div className="absolute top-8 bg-white w-full shadow-lg shadow-white/5 overflow-hidden p-2">
-            <div>
-              {/* <img className="h-10 w-12" alt="searchImage" src={null} > */}
-            </div>
-          </div>
+          {renderShowSearchResult()}
         </div>
       </div>
     </div>
