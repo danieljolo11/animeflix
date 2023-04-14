@@ -7,7 +7,7 @@ export const Navbar = () => {
   const [searchForm, setSearchForm] = useState("");
 
   useEffect(() => {
-    const delay = searchForm ? 1000 : 0;
+    const delay = searchForm ? 500 : 0;
     const delayinsearch = setTimeout(() => {
       getSearchResult();
     }, delay);
@@ -32,8 +32,8 @@ export const Navbar = () => {
     return (
       <div
         className={`${
-          data.length > 0 ? "h-[30rem]" : "h-0"
-        } absolute top-8 bg-[#222831] transition-[height] duration-500 rounded-b-md w-full shadow-lg shadow-white/5 overflow-hidden z-50 px-2`}
+          data.length > 0 ? "max-h-[30rem]" : "max-h-0"
+        } absolute top-8  bg-[#222831] transition-all duration-1000 rounded-b-md w-full shadow-lg shadow-white/5 overflow-hidden z-50 px-2`}
       >
         {data.map(({ id, image, title, releaseDate }) => {
           return (
@@ -66,6 +66,26 @@ export const Navbar = () => {
     );
   };
 
+  const renderNoResult = () => {
+    const data = searchData || [];
+    let show = false;
+    if (data.length === 0 && searchForm) {
+      show = true;
+    }
+
+    return (
+      <div
+        className={`${
+          show ? "max-h-[30rem]" : "max-h-0"
+        } absolute top-8  bg-[#222831] transition-all duration-1000 rounded-b-md w-full shadow-lg shadow-white/5 overflow-hidden z-50 px-2`}
+      >
+        <p className="text-center mt-2 mb-4 cursor-pointer text-sm font-medium text-zinc-200">
+          No Result
+        </p>
+      </div>
+    );
+  };
+
   return (
     <div className="bg-[#393E46] h-16 flex items-center px-4">
       <div className="flex flex-row items-center gap-3 w-full">
@@ -86,6 +106,7 @@ export const Navbar = () => {
             onBlur={() => setSearchForm("")}
           />
           {renderShowSearchResult()}
+          {renderNoResult()}
         </div>
       </div>
     </div>
