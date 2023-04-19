@@ -1,10 +1,14 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import useAuth from "./AuthProvider";
+import { Loader } from "./Loader";
 
 // Icons
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
-import useAuth from "./AuthProvider";
 
 export default function Anime() {
+  const navigate = useNavigate();
+
   const {
     currentPage,
     recentDataLoading,
@@ -13,20 +17,6 @@ export default function Anime() {
     setRecentDataLoading,
     setCurrentPage,
   } = useAuth();
-
-  const Loader = (
-    <div className="min-h-screen flex justify-center items-center bg-[#222831]">
-      <div className="pyramid-loader">
-        <div className="wrapper">
-          <span className="side side1"></span>
-          <span className="side side2"></span>
-          <span className="side side3"></span>
-          <span className="side side4"></span>
-          <span className="shadow"></span>
-        </div>
-      </div>
-    </div>
-  );
 
   return (
     <div className="flex flex-col py-2 gap-3">
@@ -65,15 +55,25 @@ export default function Anime() {
       </div>
       <div className="flex flex-row">
         {recentDataLoading ? (
-          <div className="basis-[70%]">{Loader}</div>
+          <div className="basis-[70%]">
+            <Loader />
+          </div>
         ) : (
           <div className="basis-[70%]">
             <div className="grid grid-cols-5 gap-3">
               {recentAnimeData.results.map(
-                ({ image, title, episodeNumber }) => (
+                ({ image, title, episodeNumber, id, episodeId }) => (
                   <div
-                    key={title}
+                    key={id}
                     className="flex flex-col gap-1 items-center cursor-pointer mx-2 transition-transform scale-100 hover:scale-105 duration-500"
+                    onClick={() =>
+                      navigate("/watch", {
+                        state: {
+                          animeID: id,
+                          episodeId,
+                        },
+                      })
+                    }
                   >
                     <div className="relative">
                       <img className="h-44 w-40" alt="AnimeImage" src={image} />

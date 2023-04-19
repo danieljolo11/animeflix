@@ -5,12 +5,12 @@ import { FiSearch } from "react-icons/fi";
 export const Navbar = () => {
   const [searchData, setSearchData] = useState([]);
   const [searchForm, setSearchForm] = useState("");
+  const [show, setShowNoResult] = useState(false);
 
   useEffect(() => {
-    const delay = searchForm ? 500 : 0;
     const delayinsearch = setTimeout(() => {
       getSearchResult();
-    }, delay);
+    }, 200);
     return () => clearTimeout(delayinsearch); // eslint-disable-next-line
   }, [searchForm]);
 
@@ -22,8 +22,21 @@ export const Navbar = () => {
           ? data.results
           : data.results.splice(0, 5);
         setSearchData(splicedata);
+        showFunction(splicedata);
       }
     });
+  };
+
+  const showFunction = (splicedata) => {
+    if (searchForm) {
+      if (splicedata.length === 0) {
+        setShowNoResult(true);
+      } else {
+        setShowNoResult(false);
+      }
+    } else {
+      setShowNoResult(false);
+    }
   };
 
   const renderShowSearchResult = () => {
@@ -32,7 +45,7 @@ export const Navbar = () => {
     return (
       <div
         className={`${
-          data.length > 0 ? "max-h-[30rem]" : "max-h-0"
+          searchData ? "max-h-[30rem]" : "max-h-0"
         } absolute top-8  bg-[#222831] transition-all duration-1000 rounded-b-md w-full shadow-lg shadow-white/5 overflow-hidden z-50 px-2`}
       >
         {data.map(({ id, image, title, releaseDate }) => {
@@ -67,17 +80,11 @@ export const Navbar = () => {
   };
 
   const renderNoResult = () => {
-    const data = searchData || [];
-    let show = false;
-    if (data.length === 0 && searchForm) {
-      show = true;
-    }
-
     return (
       <div
         className={`${
           show ? "max-h-[30rem]" : "max-h-0"
-        } absolute top-8  bg-[#222831] transition-all duration-1000 rounded-b-md w-full shadow-lg shadow-white/5 overflow-hidden z-50 px-2`}
+        } absolute top-8  bg-[#222831] transition-all duration-1000 rounded-b-md w-full shadow-lg shadow-white/5 overflow-hidden z-40 px-2`}
       >
         <p className="text-center mt-2 mb-4 cursor-pointer text-sm font-medium text-zinc-200">
           No Result
