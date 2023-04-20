@@ -22,16 +22,25 @@ export const AuthProvider = ({ children }) => {
   }, [currentPage]);
 
   const getApiDatas = async () => {
+    const pageresult = currentPage === 1 ? 29 : currentPage === 2 ? 21 : 20;
     // API ROUTE
-    const recenturl =
-      "https://api.consumet.org/anime/gogoanime/recent-episodes";
-    const topairurl = "https://api.consumet.org/anime/gogoanime/top-airing";
+    const recenturl = "https://api.consumet.org/meta/anilist/recent-episodes";
+    const topairurl = "https://api.consumet.org/meta/anilist/trending";
 
     // API REQUEST
     const getRecentEpisode = axios.get(recenturl, {
-      params: { page: currentPage, type: 1 },
+      params: {
+        page: currentPage,
+        perPage: pageresult,
+        provider: "gogoanime",
+      },
     });
-    const getTopAiring = axios.get(topairurl);
+    const getTopAiring = axios.get(topairurl, {
+      params: {
+        page: 1,
+        perPage: 10,
+      },
+    });
 
     // API GET DATA
     const [recentApiData, topAiringApiData] = await Promise.allSettled([
@@ -45,6 +54,7 @@ export const AuthProvider = ({ children }) => {
     // API DATA'S
     const { data: recentData, status: recentStatus } = recentApiData.value;
     const { data: topairData, status: topairStatus } = topAiringApiData.value;
+    // console.log("recentData:", recentData);
 
     // API STATE
     setRecentAnimeData(recentStatus === 200 ? recentData : []);
