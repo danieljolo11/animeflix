@@ -54,7 +54,6 @@ export const AuthProvider = ({ children }) => {
     // API DATA'S
     const { data: recentData, status: recentStatus } = recentApiData.value;
     const { data: topairData, status: topairStatus } = topAiringApiData.value;
-    // console.log("recentData:", recentData);
 
     // API STATE
     setRecentAnimeData(recentStatus === 200 ? recentData : []);

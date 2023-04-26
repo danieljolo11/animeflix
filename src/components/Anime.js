@@ -17,7 +17,6 @@ export default function Anime() {
     setRecentDataLoading,
     setCurrentPage,
   } = useAuth();
-  console.log("topAiringData:", topAiringData);
 
   return (
     <div className="flex flex-col py-2 gap-3">

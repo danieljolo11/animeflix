@@ -48,7 +48,7 @@ export const Navbar = () => {
       <div
         className={`${
           searchData ? "max-h-[30rem]" : "max-h-0"
-        } absolute top-8  bg-[#222831] transition-all duration-1000 rounded-b-md w-full shadow-lg shadow-white/5 overflow-hidden z-50 px-2`}
+        } absolute top-8 bg-[#222831] transition-all duration-1000 rounded-b-md w-full md:w-[21.5rem] lg:w-[31.5rem] shadow-lg shadow-white/5 overflow-hidden z-50 px-2`}
       >
         {data.map(
           ({
@@ -134,7 +134,7 @@ export const Navbar = () => {
         >
           Animeflix
         </div>
-        <div className="flex flex-row items-center relative">
+        <div className="flex flex-row items-center relative w-full">
           <div className="bg-[#222831] py-2.5 rounded-l-md pl-2">
             <FiSearch className="text-zinc-300" />
           </div>

@@ -10,10 +10,26 @@
   }
 }
 
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    width: 0.5rem;
+    height: 1px;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    border-radius: 100vh;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: #9b9e9e;
+    border-radius: 100vh;
+  }
+}
+
 * {
   font-family: "Poppins", sans-serif;
 }
 
 .searchinput {
-  @apply block w-[30rem] bg-[#222831] rounded-r-md py-2 text-zinc-300 outline-none px-2 text-sm font-normal placeholder:text-xs;
+  @apply block w-full md:w-[20rem] lg:w-[30rem] bg-[#222831] rounded-r-md py-2 text-zinc-300 outline-none px-2 text-sm font-normal placeholder:text-xs;
 }
