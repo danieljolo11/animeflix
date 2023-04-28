@@ -1,9 +1,23 @@
-import React, { useEffect, useState, Fragment } from "react";
-import axios from "axios";
+import React, { useState, Fragment } from "react";
 import { Combobox, Transition } from "@headlessui/react";
 import { ChevronUpDownIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
+import useAuth from "./AuthProvider";
 
 export const ListOfGenre = () => {
+  const {
+    // setStates
+    setSelectedGenre,
+    setSelectedYear,
+    setSelectedSeason,
+    setSelectedFormat,
+    setCurrentPage,
+    // states
+    selectedGenre,
+    selectedYear,
+    selectedSeason,
+    selectedFormat,
+  } = useAuth();
+
   const genres = [
     "Action",
     "Adventure",
@@ -35,11 +49,7 @@ export const ListOfGenre = () => {
     "music",
   ];
 
-  const [selectedGenre, setSelectedGenre] = useState([]);
   const [query, setQuery] = useState("");
-  const [selectedYear, setSelectedYear] = useState("");
-  const [selectedSeason, setSelectedSeason] = useState("");
-  const [selectedFormat, setSelectedFormat] = useState("");
 
   const filteredGenres =
     query === ""
@@ -51,54 +61,23 @@ export const ListOfGenre = () => {
             .includes(query.toLowerCase().replace(/\s+/g, ""))
         );
 
-  useEffect(() => {
-    getGenreSelected(); // eslint-disable-next-line
-  }, [selectedGenre, selectedYear, selectedSeason, selectedFormat]);
-
   const getYears = () => {
     const year = new Date().getFullYear();
     return Array.from(new Array(84), (val, index) => year - index);
-  };
-
-  const getGenreSelected = async () => {
-    let genreData = [];
-    let replaceFormat = "";
-    const sortedGenre = selectedGenre.sort();
-    sortedGenre.map((item) => {
-      return genreData.push(`"${item}"`);
-    });
-
-    if (selectedFormat === "TV show") {
-      replaceFormat = selectedFormat.replace(" show", "");
-    } else if (selectedFormat === "TV short") {
-      replaceFormat = selectedFormat.replace(" ", "_");
-    } else {
-      replaceFormat = selectedFormat;
-    }
-
-    const url = `https://api.consumet.org/meta/anilist/advanced-search`;
-    const params = {
-      page: 1,
-      perPage: 20,
-      season: selectedSeason ? selectedSeason.toUpperCase() : null,
-      year: selectedYear ? selectedYear : null,
-      type: "ANIME",
-      format: selectedFormat ? replaceFormat.toUpperCase() : null,
-      genres: genreData.length > 0 ? `[${genreData}]` : null,
-    };
-
-    await axios.get(url, { params }).then(({ data, status }) => {
-      if (status === 200) {
-        console.log("result: ", data);
-      }
-    });
   };
 
   const renderGenreSelection = () => {
     return (
       <div className="">
         <div className="max-w-[15rem]">
-          <Combobox value={selectedGenre} onChange={setSelectedGenre} multiple>
+          <Combobox
+            value={selectedGenre}
+            onChange={(value) => {
+              setSelectedGenre(value);
+              setCurrentPage(1);
+            }}
+            multiple
+          >
             <div className="relative mt-1">
               <div className="relative w-full cursor-default">
                 <Combobox.Input
@@ -179,7 +158,13 @@ export const ListOfGenre = () => {
     return (
       <div className="">
         <div className="max-w-[15rem]">
-          <Combobox value={selectedYear} onChange={setSelectedYear}>
+          <Combobox
+            value={selectedYear}
+            onChange={(value) => {
+              setSelectedYear(value);
+              setCurrentPage(1);
+            }}
+          >
             <div className="relative mt-1">
               <div className="relative w-full cursor-default">
                 <Combobox.Input
@@ -255,7 +240,13 @@ export const ListOfGenre = () => {
     return (
       <div className="">
         <div className="max-w-[15rem]">
-          <Combobox value={selectedSeason} onChange={setSelectedSeason}>
+          <Combobox
+            value={selectedSeason}
+            onChange={(value) => {
+              setSelectedSeason(value);
+              setCurrentPage(1);
+            }}
+          >
             <div className="relative mt-1">
               <div className="relative w-full cursor-default">
                 <Combobox.Input
@@ -335,7 +326,13 @@ export const ListOfGenre = () => {
     return (
       <div className="">
         <div className="max-w-[15rem]">
-          <Combobox value={selectedFormat} onChange={setSelectedFormat}>
+          <Combobox
+            value={selectedFormat}
+            onChange={(value) => {
+              setSelectedFormat(value);
+              setCurrentPage(1);
+            }}
+          >
             <div className="relative mt-1">
               <div className="relative w-full cursor-default">
                 <Combobox.Input
@@ -408,7 +405,7 @@ export const ListOfGenre = () => {
   };
 
   return (
-    <div className="flex flex-row gap-4 p-4">
+    <div className="flex flex-row justify-center gap-4 p-4">
       {renderGenreSelection()}
       {renderYearSelection()}
       {renderSeasonSelection()}

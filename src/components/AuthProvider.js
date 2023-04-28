@@ -1,28 +1,39 @@
 import React, {
   createContext,
+  useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from "react";
 import axios from "axios";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const AuthContext = createContext({});
 
 export const AuthProvider = ({ children }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [isLoading, setIsLoading] = useState(true);
   const [recentDataLoading, setRecentDataLoading] = useState(false);
   const [recentAnimeData, setRecentAnimeData] = useState([]);
   const [topAiringData, setTopAiringData] = useState([]);
+  const [searchSelected, setSearchSelected] = useState([]);
+
+  const [selectedGenre, setSelectedGenre] = useState([]);
+  const [selectedYear, setSelectedYear] = useState("");
+  const [selectedSeason, setSelectedSeason] = useState("");
+  const [selectedFormat, setSelectedFormat] = useState("");
 
   const [currentPage, setCurrentPage] = useState(1);
+  const [currentPageSearch, setCurrentPageSearch] = useState(1);
 
   useEffect(() => {
     getApiDatas(); // eslint-disable-next-line
   }, [currentPage]);
 
   const getApiDatas = async () => {
-    const pageresult = currentPage === 1 ? 29 : currentPage === 2 ? 21 : 20;
     // API ROUTE
     const recenturl = "https://api.consumet.org/meta/anilist/recent-episodes";
     const topairurl = "https://api.consumet.org/meta/anilist/trending";
@@ -31,7 +42,7 @@ export const AuthProvider = ({ children }) => {
     const getRecentEpisode = axios.get(recenturl, {
       params: {
         page: currentPage,
-        perPage: pageresult,
+        perPage: 20,
         provider: "gogoanime",
       },
     });
@@ -60,24 +71,117 @@ export const AuthProvider = ({ children }) => {
     setTopAiringData(topairStatus === 200 ? topairData.results : []);
   };
 
+  const getGenreSelected = useCallback(async () => {
+    console.log("location", location);
+    setIsLoading(true);
+    let genreData = [];
+    let replaceFormat = "";
+    const sortedGenre = selectedGenre.sort();
+
+    sortedGenre.map((item) => {
+      return genreData.push(`"${item}"`);
+    });
+
+    if (selectedFormat === "TV show") {
+      replaceFormat = selectedFormat.replace(" show", "");
+    } else if (selectedFormat === "TV short") {
+      replaceFormat = selectedFormat.replace(" ", "_");
+    } else {
+      replaceFormat = selectedFormat;
+    }
+
+    const url = `https://api.consumet.org/meta/anilist/advanced-search`;
+    const params = {
+      page: currentPageSearch > 0 ? currentPageSearch : null,
+      perPage: 50,
+      season: selectedSeason ? selectedSeason.toUpperCase() : null,
+      year: selectedYear ? selectedYear : null,
+      format: selectedFormat ? replaceFormat.toUpperCase() : null,
+      genres: genreData.length > 0 ? `[${genreData}]` : null,
+    };
+
+    await axios
+      .get(url, { params })
+      .then(({ data, status }) => {
+        if (status === 200) {
+          setSearchSelected(data);
+          if (location.pathname === "/genresresult") {
+            return null;
+          } else {
+            if (
+              selectedGenre.length > 0 ||
+              selectedYear ||
+              selectedSeason ||
+              selectedFormat
+            ) {
+              return navigate("/genresresult");
+            }
+          }
+        }
+      })
+      .finally(() => setIsLoading(false));
+  }, [
+    selectedGenre,
+    selectedYear,
+    selectedSeason,
+    selectedFormat,
+    currentPageSearch,
+    location,
+    navigate,
+  ]);
+
   const memoedValue = useMemo(
     () => ({
       isLoading,
-      recentDataLoading,
+      searchSelected,
+      setSearchSelected,
+
+      // Anime
       recentAnimeData,
       topAiringData,
       currentPage,
+      recentDataLoading,
       setCurrentPage,
       setRecentDataLoading,
+
+      // Genres
+      selectedGenre,
+      selectedYear,
+      selectedSeason,
+      selectedFormat,
+      currentPageSearch,
+      setSelectedGenre,
+      setSelectedYear,
+      setSelectedSeason,
+      setSelectedFormat,
+      getGenreSelected,
+      setCurrentPageSearch,
     }),
     [
       isLoading,
-      recentDataLoading,
+      searchSelected,
+      setSearchSelected,
+
+      // Anime
       recentAnimeData,
       topAiringData,
       currentPage,
+      recentDataLoading,
       setCurrentPage,
       setRecentDataLoading,
+
+      // Genres
+      selectedGenre,
+      selectedYear,
+      selectedSeason,
+      selectedFormat,
+      currentPageSearch,
+      setSelectedGenre,
+      setSelectedYear,
+      setSelectedSeason,
+      setSelectedFormat,
+      setCurrentPageSearch,
+      getGenreSelected,
     ]
   );
 

@@ -2,8 +2,16 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { FiSearch } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import useAuth from "./AuthProvider";
 
 export const Navbar = () => {
+  const {
+    setSelectedGenre,
+    setSelectedYear,
+    setSelectedSeason,
+    setSelectedFormat,
+    setCurrentPageSearch,
+  } = useAuth();
   const navigate = useNavigate();
   const [searchData, setSearchData] = useState([]);
   const [searchForm, setSearchForm] = useState("");
@@ -130,7 +138,14 @@ export const Navbar = () => {
       <div className="flex flex-row items-center gap-3 w-full">
         <div
           className="text-xl font-semibold text-[#EEEEEE] cursor-pointer"
-          onClick={() => navigate("/")}
+          onClick={() => {
+            setSelectedGenre([]);
+            setSelectedYear("");
+            setSelectedSeason("");
+            setSelectedFormat("");
+            setCurrentPageSearch(1);
+            navigate("/");
+          }}
         >
           Animeflix
         </div>
