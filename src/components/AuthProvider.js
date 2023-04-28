@@ -72,7 +72,7 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     getGenreSelected(); // eslint-disable-next-line
-  }, [selectedGenre, selectedYear, selectedSeason, selectedFormat]);
+  }, [selectedGenre, selectedYear, selectedSeason, selectedFormat, currentPageSearch]);
 
   const getGenreSelected = async () => {
     setIsLoading(true);
