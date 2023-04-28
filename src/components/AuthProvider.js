@@ -1,6 +1,5 @@
 import React, {
   createContext,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
@@ -71,8 +70,11 @@ export const AuthProvider = ({ children }) => {
     setTopAiringData(topairStatus === 200 ? topairData.results : []);
   };
 
-  const getGenreSelected = useCallback(async () => {
-    console.log("location", location);
+  useEffect(() => {
+    getGenreSelected(); // eslint-disable-next-line
+  }, [selectedGenre, selectedYear, selectedSeason, selectedFormat]);
+
+  const getGenreSelected = async () => {
     setIsLoading(true);
     let genreData = [];
     let replaceFormat = "";
@@ -120,15 +122,7 @@ export const AuthProvider = ({ children }) => {
         }
       })
       .finally(() => setIsLoading(false));
-  }, [
-    selectedGenre,
-    selectedYear,
-    selectedSeason,
-    selectedFormat,
-    currentPageSearch,
-    location,
-    navigate,
-  ]);
+  };
 
   const memoedValue = useMemo(
     () => ({
@@ -154,7 +148,6 @@ export const AuthProvider = ({ children }) => {
       setSelectedYear,
       setSelectedSeason,
       setSelectedFormat,
-      getGenreSelected,
       setCurrentPageSearch,
     }),
     [
@@ -181,7 +174,6 @@ export const AuthProvider = ({ children }) => {
       setSelectedSeason,
       setSelectedFormat,
       setCurrentPageSearch,
-      getGenreSelected,
     ]
   );
 
