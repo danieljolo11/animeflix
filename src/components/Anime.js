@@ -53,7 +53,7 @@ export default function Anime() {
 const AnimeShown = () => {
   const navigate = useNavigate();
   const { recentAnimeData, recentDataLoading, topAiringData } = useAuth();
-
+  const data = recentAnimeData.results || [];
   return (
     <div className="flex flex-row">
       {recentDataLoading ? (
@@ -63,7 +63,7 @@ const AnimeShown = () => {
       ) : (
         <div className="basis-[70%]">
           <div className="grid grid-cols-5 gap-3">
-            {recentAnimeData.results.map(
+            {data.map(
               ({
                 image,
                 title: { userPreferred },
