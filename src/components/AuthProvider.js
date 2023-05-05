@@ -95,7 +95,7 @@ export const AuthProvider = ({ children }) => {
     const url = `https://api.consumet.org/meta/anilist/advanced-search`;
     const params = {
       page: currentPageSearch > 0 ? currentPageSearch : null,
-      perPage: 50,
+      perPage: 20,
       season: selectedSeason ? selectedSeason.toUpperCase() : null,
       year: selectedYear ? selectedYear : null,
       format: selectedFormat ? replaceFormat.toUpperCase() : null,

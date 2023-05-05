@@ -5,6 +5,7 @@ import { Loader } from "./Loader";
 
 // Icons
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { AiFillHeart } from "react-icons/ai";
 
 export default function Anime() {
   const { currentPage, recentAnimeData, setRecentDataLoading, setCurrentPage } =
@@ -73,7 +74,7 @@ const AnimeShown = () => {
               }) => (
                 <div
                   key={id}
-                  className="flex flex-col gap-1 items-center cursor-pointer mx-2 transition-transform scale-100 hover:scale-105 duration-500"
+                  className="relative group flex flex-col gap-1 items-center cursor-pointer mx-2 "
                   onClick={() =>
                     navigate("/watch", {
                       state: {
@@ -83,20 +84,24 @@ const AnimeShown = () => {
                     })
                   }
                 >
-                  <div className="relative">
+                  <div className="">
                     <img className="h-44 w-40" alt="AnimeImage" src={image} />
-                    <div className="absolute top-0 left-0 bg-[#00ADB5] px-1 rounded-br-md">
-                      <p className="text-xs font-medium text-[#222831]">
-                        Episode {episodeNumber}
-                      </p>
-                    </div>
-                    <div className="absolute top-0 right-0 bg-[#00ADB5] px-1 rounded-bl-md">
-                      <p className="text-xs font-medium text-[#222831]">Sub</p>
-                    </div>
                   </div>
                   <span className="text-zinc-300 text-sm font-medium text-center line-clamp-2">
                     {userPreferred}
                   </span>
+                  <div className="flex flex-row transition-opacity opacity-0 invisible group-hover:visible group-hover:opacity-100 duration-500 absolute top-0 bottom-0 -right-44 h-fit z-20">
+                    <div className="absolute -left-1.5 top-2 bottom-0">
+                      <AiFillHeart className="text-white rotate-90" />
+                    </div>
+                    <div className="bg-white h-20 w-fit rounded-md z-20">
+                      <span>TEST</span>
+                      <span>TEST</span>
+                      <span>TEST</span>
+                      <span>TEST</span>
+                      <span>TEST</span>
+                    </div>
+                  </div>
                 </div>
               )
             )}
@@ -123,13 +128,7 @@ const AnimeShown = () => {
               >
                 <div className="flex flex-row items-center gap-2">
                   <span
-                    className={`${
-                      index === 0
-                        ? "bg-[#008fb5]"
-                        : index === 1
-                        ? "bg-[#00ADB5]"
-                        : "bg-transparent"
-                    } text-4xl w-14 flex justify-center items-center py-4`}
+                    className={`bg-[#008fb5] text-4xl w-14 flex justify-center items-center py-4`}
                   >
                     {index + 1}
                   </span>

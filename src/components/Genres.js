@@ -10,7 +10,7 @@ export const ListOfGenre = () => {
     setSelectedYear,
     setSelectedSeason,
     setSelectedFormat,
-    setCurrentPage,
+    setCurrentPageSearch,
     // states
     selectedGenre,
     selectedYear,
@@ -74,7 +74,7 @@ export const ListOfGenre = () => {
             value={selectedGenre}
             onChange={(value) => {
               setSelectedGenre(value);
-              setCurrentPage(1);
+              setCurrentPageSearch(1);
             }}
             multiple
           >
@@ -162,7 +162,7 @@ export const ListOfGenre = () => {
             value={selectedYear}
             onChange={(value) => {
               setSelectedYear(value);
-              setCurrentPage(1);
+              setCurrentPageSearch(1);
             }}
           >
             <div className="relative mt-1">
@@ -244,7 +244,7 @@ export const ListOfGenre = () => {
             value={selectedSeason}
             onChange={(value) => {
               setSelectedSeason(value);
-              setCurrentPage(1);
+              setCurrentPageSearch(1);
             }}
           >
             <div className="relative mt-1">
@@ -330,7 +330,7 @@ export const ListOfGenre = () => {
             value={selectedFormat}
             onChange={(value) => {
               setSelectedFormat(value);
-              setCurrentPage(1);
+              setCurrentPageSearch(1);
             }}
           >
             <div className="relative mt-1">

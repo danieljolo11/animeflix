@@ -3,32 +3,41 @@ import useAuth from "./AuthProvider";
 import { Navbar } from "./Navbar";
 import { Loader } from "./Loader";
 import { ListOfGenre } from "./Genres";
+import { useNavigate } from "react-router-dom";
 
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 function GenresDisplay() {
+  const navigate = useNavigate();
   const { isLoading, searchSelected, currentPageSearch, setCurrentPageSearch } =
     useAuth();
 
   const renderContainer = () => {
     const data = searchSelected.results || [];
+    console.log("searchSelected:", searchSelected)
     return (
       <div className="flex flex-col px-40 gap-3 pb-10">
-        <div className="flex flex-row items-center justify-end gap-2 pr-6">
+        <div className="flex flex-row items-center justify-end gap-2 pr-6 relative">
           {currentPageSearch > 1 && (
-            <div className="text-white font-medium text-[14px] uppercase cursor-pointer transition-transform scale-100 active:scale-110">
+            <div className="group flex flex-col items-center overflow-hidden">
+              <span className="bg-[#EEEEEE] px-3 py-0.5 rounded-lg text-[#222831] text-xs invisible group-hover:visible absolute -top-5">
+                Page {searchSelected.currentPage - 1}
+              </span>
               <FiChevronLeft
-                className="h-5 w-5 cursor-pointer"
-                onClick={() => {
-                  setCurrentPageSearch(searchSelected.currentPage - 1);
-                }}
+                className="h-5 w-5 cursor-pointer text-white"
+                onClick={() =>
+                  setCurrentPageSearch(searchSelected.currentPage - 1)
+                }
               />
             </div>
           )}
           {searchSelected.hasNextPage && (
-            <div className="text-white font-medium text-[14px] uppercase cursor-pointer transition-transform scale-100 active:scale-110">
+            <div className="group flex flex-col items-center overflow-hidden">
+              <p className="bg-[#EEEEEE] px-3 py-0.5 rounded-lg text-[#222831] text-xs invisible group-hover:visible absolute -top-5">
+                Page {searchSelected.currentPage + 1}
+              </p>
               <FiChevronRight
-                className="h-5 w-5 cursor-pointer"
+                className="h-5 w-5 cursor-pointer hover text-white"
                 onClick={() =>
                   setCurrentPageSearch(searchSelected.currentPage + 1)
                 }
@@ -37,11 +46,19 @@ function GenresDisplay() {
           )}
         </div>
         <div className="grid grid-cols-5 gap-6">
-          {data.map(({ image, id, title: { userPreferred } }) => {
+          {data.map(({ image, id, episodeId, title: { userPreferred } }) => {
             return (
               <div
                 key={id}
                 className="flex flex-col gap-1 items-center cursor-pointer mx-2 transition-transform scale-100 hover:scale-105 duration-500"
+                onClick={() =>
+                  navigate("/watch", {
+                    state: {
+                      animeID: id,
+                      episodeId,
+                    },
+                  })
+                }
               >
                 <div className="relative">
                   <img className="h-44 w-40" alt="AnimeImage" src={image} />
