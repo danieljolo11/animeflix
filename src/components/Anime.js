@@ -4,7 +4,7 @@ import useAuth from "./AuthProvider";
 import { Loader } from "./Loader";
 
 // Icons
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FiChevronLeft, FiChevronRight, FiSmile } from "react-icons/fi";
 import { AiFillHeart } from "react-icons/ai";
 
 export default function Anime() {
@@ -55,6 +55,7 @@ const AnimeShown = () => {
   const navigate = useNavigate();
   const { recentAnimeData, recentDataLoading, topAiringData } = useAuth();
   const data = recentAnimeData.results || [];
+  console.log("data:", data);
   return (
     <div className="flex flex-row">
       {recentDataLoading ? (
@@ -71,39 +72,65 @@ const AnimeShown = () => {
                 episodeNumber,
                 id,
                 episodeId,
-              }) => (
-                <div
-                  key={id}
-                  className="relative group flex flex-col gap-1 items-center cursor-pointer mx-2 "
-                  onClick={() =>
-                    navigate("/watch", {
-                      state: {
-                        animeID: id,
-                        episodeId,
-                      },
-                    })
-                  }
-                >
-                  <div className="">
-                    <img className="h-44 w-40" alt="AnimeImage" src={image} />
-                  </div>
-                  <span className="text-zinc-300 text-sm font-medium text-center line-clamp-2">
-                    {userPreferred}
-                  </span>
-                  <div className="flex flex-row transition-opacity opacity-0 invisible group-hover:visible group-hover:opacity-100 duration-500 absolute top-0 bottom-0 -right-44 h-fit z-20">
-                    <div className="absolute -left-1.5 top-2 bottom-0">
-                      <AiFillHeart className="text-white rotate-90" />
+                rating,
+                genres,
+                type,
+                episodeTitle,
+              }) => {
+                const test = [...genres];
+                const splicedGenres = test.splice(0, 3);
+                return (
+                  <div
+                    key={id}
+                    className="relative group flex flex-col gap-1 items-center cursor-pointer mx-2 "
+                    onClick={() =>
+                      navigate("/watch", {
+                        state: {
+                          animeID: id,
+                          episodeId,
+                        },
+                      })
+                    }
+                  >
+                    <div className="">
+                      <img className="h-44 w-40" alt="AnimeImage" src={image} />
                     </div>
-                    <div className="bg-white h-20 w-fit rounded-md z-20">
-                      <span>TEST</span>
-                      <span>TEST</span>
-                      <span>TEST</span>
-                      <span>TEST</span>
-                      <span>TEST</span>
+                    <span className="text-zinc-300 text-sm font-medium text-center line-clamp-2">
+                      {userPreferred}
+                    </span>
+                    <div className="flex flex-row transition-opacity opacity-0 invisible group-hover:visible group-hover:opacity-100 duration-500 absolute top-0 bottom-0 -right-[21rem] h-fit z-20">
+                      <div className="absolute -left-1.5 top-2 bottom-0">
+                        <AiFillHeart className="text-white rotate-90" />
+                      </div>
+                      <div className="flex flex-col gap-3 bg-white h-fit w-80 rounded-md z-20 p-5">
+                        <div className="flex flex-row items-center justify-between">
+                          <span className="text-zinc-900 font-medium text-sm">
+                            Episode {episodeNumber} : {episodeTitle}
+                          </span>
+                          {rating && (
+                            <div className="flex flex-row gap-1">
+                              <FiSmile />
+                              <span className="text-zinc-900 font-medium text-sm">
+                                {rating}%
+                              </span>
+                            </div>
+                          )}
+                        </div>
+                        <div className="text-zinc-900 font-medium text-sm">{type}</div>
+                        <div className="flex flex-row items-center gap-2 mt-2">
+                          {splicedGenres.map((item) => {
+                            return (
+                              <div className="bg-[#008fb5] py-1 px-2 rounded-full text-xs text-white">
+                                {item}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )
+                );
+              }
             )}
           </div>
         </div>
