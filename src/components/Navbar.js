@@ -124,7 +124,7 @@ export const Navbar = () => {
       <div
         className={`${
           show ? "max-h-[30rem]" : "max-h-0"
-        } absolute top-8  bg-[#222831] transition-all duration-1000 rounded-b-md w-full shadow-lg shadow-white/5 overflow-hidden z-40 px-2`}
+        } absolute top-8 bg-[#222831] transition-all duration-1000 rounded-b-md w-full md:w-[21.5rem] lg:w-[31.5rem] shadow-lg shadow-white/5 overflow-hidden z-50 px-2`}
       >
         <p className="text-center mt-2 mb-4 cursor-pointer text-sm font-medium text-zinc-200">
           No Result

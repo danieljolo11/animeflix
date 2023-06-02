@@ -55,7 +55,7 @@ const AnimeShown = () => {
   const navigate = useNavigate();
   const { recentAnimeData, recentDataLoading, topAiringData } = useAuth();
   const data = recentAnimeData.results || [];
-  console.log("data:", data);
+
   return (
     <div className="flex flex-row">
       {recentDataLoading ? (
