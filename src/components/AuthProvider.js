@@ -4,9 +4,9 @@ import React, {
   useEffect,
   useMemo,
   useState,
-} from "react";
-import axios from "axios";
-import { useLocation, useNavigate } from "react-router-dom";
+} from 'react';
+import axios from 'axios';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const AuthContext = createContext({});
 
@@ -21,9 +21,9 @@ export const AuthProvider = ({ children }) => {
   const [searchSelected, setSearchSelected] = useState([]);
 
   const [selectedGenre, setSelectedGenre] = useState([]);
-  const [selectedYear, setSelectedYear] = useState("");
-  const [selectedSeason, setSelectedSeason] = useState("");
-  const [selectedFormat, setSelectedFormat] = useState("");
+  const [selectedYear, setSelectedYear] = useState('');
+  const [selectedSeason, setSelectedSeason] = useState('');
+  const [selectedFormat, setSelectedFormat] = useState('');
 
   const [currentPage, setCurrentPage] = useState(1);
   const [currentPageSearch, setCurrentPageSearch] = useState(1);
@@ -34,15 +34,17 @@ export const AuthProvider = ({ children }) => {
 
   const getApiDatas = async () => {
     // API ROUTE
-    const recenturl = "https://api.consumet.org/meta/anilist/recent-episodes";
-    const topairurl = "https://api.consumet.org/meta/anilist/trending";
+    const recenturl =
+      'https://api-consumet-org-zeta.vercel.app/meta/anilist/recent-episodes';
+    const topairurl =
+      'https://api-consumet-org-zeta.vercel.app/meta/anilist/trending';
 
     // API REQUEST
     const getRecentEpisode = axios.get(recenturl, {
       params: {
         page: currentPage,
         perPage: 20,
-        provider: "gogoanime",
+        provider: 'gogoanime',
       },
     });
     const getTopAiring = axios.get(topairurl, {
@@ -72,27 +74,33 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     getGenreSelected(); // eslint-disable-next-line
-  }, [selectedGenre, selectedYear, selectedSeason, selectedFormat, currentPageSearch]);
+  }, [
+    selectedGenre,
+    selectedYear,
+    selectedSeason,
+    selectedFormat,
+    currentPageSearch,
+  ]);
 
   const getGenreSelected = async () => {
     setIsLoading(true);
     let genreData = [];
-    let replaceFormat = "";
+    let replaceFormat = '';
     const sortedGenre = selectedGenre.sort();
 
     sortedGenre.map((item) => {
       return genreData.push(`"${item}"`);
     });
 
-    if (selectedFormat === "TV show") {
-      replaceFormat = selectedFormat.replace(" show", "");
-    } else if (selectedFormat === "TV short") {
-      replaceFormat = selectedFormat.replace(" ", "_");
+    if (selectedFormat === 'TV show') {
+      replaceFormat = selectedFormat.replace(' show', '');
+    } else if (selectedFormat === 'TV short') {
+      replaceFormat = selectedFormat.replace(' ', '_');
     } else {
       replaceFormat = selectedFormat;
     }
 
-    const url = `https://api.consumet.org/meta/anilist/advanced-search`;
+    const url = `https://api-consumet-org-zeta.vercel.app/meta/anilist/advanced-search`;
     const params = {
       page: currentPageSearch > 0 ? currentPageSearch : null,
       perPage: 20,
@@ -107,7 +115,7 @@ export const AuthProvider = ({ children }) => {
       .then(({ data, status }) => {
         if (status === 200) {
           setSearchSelected(data);
-          if (location.pathname === "/genresresult") {
+          if (location.pathname === '/genresresult') {
             return null;
           } else {
             if (
@@ -116,7 +124,7 @@ export const AuthProvider = ({ children }) => {
               selectedSeason ||
               selectedFormat
             ) {
-              return navigate("/genresresult");
+              return navigate('/genresresult');
             }
           }
         }
