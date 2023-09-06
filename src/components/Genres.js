@@ -69,7 +69,7 @@ export const ListOfGenre = () => {
   const renderGenreSelection = () => {
     return (
       <div className="">
-        <div className="max-w-[15rem]">
+        <div className="max-w-none lg:max-w-[15rem]">
           <Combobox
             value={selectedGenre}
             onChange={(value) => {
@@ -157,7 +157,7 @@ export const ListOfGenre = () => {
 
     return (
       <div className="">
-        <div className="max-w-[15rem]">
+        <div className="max-w-none lg:max-w-[15rem]">
           <Combobox
             value={selectedYear}
             onChange={(value) => {
@@ -239,7 +239,7 @@ export const ListOfGenre = () => {
   const renderSeasonSelection = () => {
     return (
       <div className="">
-        <div className="max-w-[15rem]">
+        <div className="max-w-none lg:max-w-[15rem]">
           <Combobox
             value={selectedSeason}
             onChange={(value) => {
@@ -325,7 +325,7 @@ export const ListOfGenre = () => {
   const renderFormatSelection = () => {
     return (
       <div className="">
-        <div className="max-w-[15rem]">
+        <div className="max-w-none lg:max-w-[15rem]">
           <Combobox
             value={selectedFormat}
             onChange={(value) => {
@@ -405,7 +405,7 @@ export const ListOfGenre = () => {
   };
 
   return (
-    <div className="flex flex-row justify-center gap-4 p-4">
+    <div className="grid md:grid lg:flex grid-cols-2 md:grid-cols-4 lg:flex-row justify-center gap-4 p-4">
       {renderGenreSelection()}
       {renderYearSelection()}
       {renderSeasonSelection()}

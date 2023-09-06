@@ -15,7 +15,7 @@ export default function Anime() {
     <div className="flex flex-col py-2 gap-3">
       <div className="flex flex-row items-center justify-between pl-4 text-[#EEEEEE] relative max-w-[64rem]">
         <span className="text-xl font-semibold">Recently Updated</span>
-        <div className="flex flex-row items-center gap-2 pr-10">
+        <div className="flex flex-row items-center gap-2 pr-6 md:pr-6 lg:pr-10">
           {currentPage > 1 && (
             <div className="group flex flex-col items-center overflow-hidden">
               <span className="bg-[#EEEEEE] px-3 py-0.5 rounded-lg text-[#222831] text-xs invisible group-hover:visible absolute -top-5">
@@ -57,14 +57,14 @@ const AnimeShown = () => {
   const data = recentAnimeData.results || [];
 
   return (
-    <div className="flex flex-row">
+    <div className="flex flex-col md:flex-row lg:flex-row">
       {recentDataLoading ? (
         <div className="basis-[70%]">
           <Loader />
         </div>
       ) : (
-        <div className="basis-[70%]">
-          <div className="grid grid-cols-5 gap-3">
+        <div className="lg:basis-[70%]">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
             {data.map(
               ({
                 image,
@@ -82,7 +82,7 @@ const AnimeShown = () => {
                 return (
                   <div
                     key={id}
-                    className="relative group flex flex-col gap-1 items-center cursor-pointer mx-2 "
+                    className="group relative flex flex-col items-center overflow-hidden"
                     onClick={() =>
                       navigate("/watch", {
                         state: {
@@ -92,32 +92,35 @@ const AnimeShown = () => {
                       })
                     }
                   >
-                    <div className="">
-                      <img className="h-44 w-40" alt="AnimeImage" src={image} />
-                    </div>
+                    <img
+                      className="h-44 w-40 rounded-md"
+                      alt="AnimeImage"
+                      src={image}
+                    />
                     <span className="text-zinc-300 text-sm font-medium text-center line-clamp-2">
                       {userPreferred}
                     </span>
-                    <div className="flex flex-row transition-opacity opacity-0 invisible group-hover:visible group-hover:opacity-100 duration-500 absolute top-0 bottom-0 -right-[21rem] h-fit z-20">
-                      <div className="absolute -left-1.5 top-2 bottom-0">
-                        <AiFillHeart className="text-white rotate-90" />
-                      </div>
-                      <div className="flex flex-col gap-3 bg-white h-fit w-80 rounded-md z-20 p-5">
-                        <div className="flex flex-row items-center justify-between">
-                          <span className="text-zinc-900 font-medium text-sm">
-                            Episode {episodeNumber} : {episodeTitle}
-                          </span>
-                          {rating && (
-                            <div className="flex flex-row gap-1">
-                              <FiSmile />
-                              <span className="text-zinc-900 font-medium text-sm">
-                                {rating}%
-                              </span>
-                            </div>
-                          )}
+                    <div className="absolute top-0 left-0 w-full h-full -rotate-x-90 origin-bottom transition-all group-hover:rotate-x-0 duration-700">
+                      <div className="flex flex-col justify-between bg-white/70 rounded-md gap-3 h-full w-auto z-20 p-5">
+                        <div className="flex flex-col gap-3">
+                          <div className="flex flex-row items-center justify-between">
+                            <span className="text-zinc-900 font-medium text-sm">
+                              Episode: {episodeNumber}
+                            </span>
+                            {rating && (
+                              <div className="flex flex-row items-center gap-1">
+                                <FiSmile />
+                                <span className="text-zinc-900 font-medium text-sm">
+                                  {rating}%
+                                </span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="text-zinc-900 font-medium text-sm">
+                            {type}
+                          </div>
                         </div>
-                        <div className="text-zinc-900 font-medium text-sm">{type}</div>
-                        <div className="flex flex-row items-center gap-2 mt-2">
+                        <div className="flex flex-col items-start gap-2">
                           {splicedGenres.map((item) => {
                             return (
                               <div className="bg-[#008fb5] py-1 px-2 rounded-full text-xs text-white">
