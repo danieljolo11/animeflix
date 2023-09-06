@@ -5,7 +5,6 @@ import { Loader } from "./Loader";
 
 // Icons
 import { FiChevronLeft, FiChevronRight, FiSmile } from "react-icons/fi";
-import { AiFillHeart } from "react-icons/ai";
 
 export default function Anime() {
   const { currentPage, recentAnimeData, setRecentDataLoading, setCurrentPage } =
@@ -101,7 +100,7 @@ const AnimeShown = () => {
                       {userPreferred}
                     </span>
                     <div className="absolute top-0 left-0 w-full h-full -rotate-x-90 origin-bottom transition-all group-hover:rotate-x-0 duration-700">
-                      <div className="flex flex-col justify-between bg-white/70 rounded-md gap-3 h-full w-auto z-20 p-5">
+                      <div className="flex flex-col justify-between bg-white/90 rounded-md gap-3 h-full w-auto z-20 p-5">
                         <div className="flex flex-col gap-3">
                           <div className="flex flex-row items-center justify-between">
                             <span className="text-zinc-900 font-medium text-sm">
