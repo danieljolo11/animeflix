@@ -1,8 +1,8 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Navbar } from './Navbar';
-import { Loader } from './Loader';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { Navbar } from "./Navbar";
+import { Loader } from "./Loader";
 
 function WatchAnime() {
   const location = useLocation();
@@ -10,7 +10,7 @@ function WatchAnime() {
 
   const [animeInfoData, setAnimeInfoData] = useState([]);
   const [serverData, setServerData] = useState([]);
-  const [nextEpisode, setNextEpisode] = useState('');
+  const [nextEpisode, setNextEpisode] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -18,9 +18,9 @@ function WatchAnime() {
   }, [nextEpisode, animeID, episodeId]);
 
   const getApiDatas = async () => {
-    const animeInfoUrl = `https://api-consumet-org-zeta.vercel.app/meta/anilist/info/${animeID}`;
+    const animeInfoUrl = `https://api.consumet.org/anime/gogoanime/info/${animeID}`;
     const getAnimeInfo = axios.get(animeInfoUrl, {
-      params: { provider: 'gogoanime' },
+      params: { provider: "gogoanime" },
     });
 
     const [animeInfoApi] = await Promise.allSettled([getAnimeInfo]);
@@ -36,13 +36,11 @@ function WatchAnime() {
     const defaultEpi = getlastData[0].id;
     const currentepisode = nextEpisode ? nextEpisode : episodeId;
 
-    const serverUrl = `https://api-consumet-org-zeta.vercel.app/meta/anilist/watch/${
-      currentepisode !== null ? currentepisode : defaultEpi
-    }`;
+    const serverUrl = `https://api.consumet.org/anime/gogoanime/watch/spy-x-family-episode-1`;
     await axios
       .get(serverUrl)
       .then(({ data, status }) => {
-        console.log('yey');
+        console.log("data: ", data);
         setServerData(status === 200 ? data : []);
       })
       .finally(() => {
@@ -72,58 +70,57 @@ function WatchAnime() {
 
     const AnimeDescriptions = [
       {
-        dataname: 'Popularity',
-        datashown: popularity.toLocaleString(),
+        dataname: "Popularity",
+        datashown: popularity?.toLocaleString(),
       },
       {
-        dataname: 'Type',
+        dataname: "Type",
         datashown: type,
       },
       {
-        dataname: 'Status',
+        dataname: "Status",
         datashown: status,
       },
       {
-        dataname: 'Episodes',
+        dataname: "Episodes",
         datashown: totalEpisodes,
       },
       {
-        dataname: 'Rating',
+        dataname: "Rating",
         datashown: (rating / 10).toFixed(1),
       },
       {
-        dataname: 'Duration',
+        dataname: "Duration",
         datashown: `${duration} mins`,
       },
       {
-        dataname: 'Season',
+        dataname: "Season",
         datashown: `${season} ${startDate?.year}`,
       },
     ];
 
-    const seperategenres = genres.join(', ');
-    const seperatestudios = studios.join(', ');
-    console.log('Referer', Referer);
+    // const seperategenres = genres.join(", ");
+    // const seperatestudios = studios.join(", ");
 
     return (
       <div>
         {/* Video and Episodes */}
-        <div className='flex flex-row mt-6 h-[80vh] px-4 gap-2'>
-          <div className='flex basis-[75%]'>
+        <div className="flex flex-row mt-6 h-[80vh] px-4 gap-2">
+          <div className="flex basis-[75%]">
             <iframe
-              title='mainvideo'
+              title="mainvideo"
               allowFullScreen={true}
-              webkitallowfullscreen='true'
-              mozallowfullscreen='true'
-              height='100%'
-              width='100%'
+              webkitallowfullscreen="true"
+              mozallowfullscreen="true"
+              height="100%"
+              width="100%"
               src={Referer}
             />
           </div>
-          <div className='flex basis-[25%]'>
-            <div className='w-full'>
-              <p className='text-white bg-black/80 py-1.5 px-2'>Episodes</p>
-              <div className='flex flex-col overflow-auto bg-white/30 h-[34rem]'>
+          <div className="flex basis-[25%]">
+            <div className="w-full">
+              <p className="text-white bg-black/80 py-1.5 px-2">Episodes</p>
+              <div className="flex flex-col overflow-auto bg-white/30 h-[34rem]">
                 {episodes.map((items) => {
                   const defaultEpisode = currentEpisode === items.number;
                   const clickNext = nextEpisode === items.id;
@@ -135,19 +132,19 @@ function WatchAnime() {
                       key={items.id}
                       onClick={() => setNextEpisode(items.id)}
                       className={`${
-                        getcurrentepisode ? 'bg-[#00ADB5]' : 'bg-transparent'
+                        getcurrentepisode ? "bg-[#00ADB5]" : "bg-transparent"
                       } p-2 cursor-pointer flex flex-row items-center gap-3`}
                     >
                       <span
                         className={`${
-                          getcurrentepisode ? 'text-white' : 'text-zinc-900'
+                          getcurrentepisode ? "text-white" : "text-zinc-900"
                         } text-base font-medium line-clamp-1`}
                       >
                         {items?.number}.
                       </span>
                       <p
                         className={`${
-                          getcurrentepisode ? 'text-white' : 'text-zinc-900'
+                          getcurrentepisode ? "text-white" : "text-zinc-900"
                         } text-base font-medium line-clamp-1`}
                       >
                         {items?.title}
@@ -159,46 +156,46 @@ function WatchAnime() {
             </div>
           </div>
         </div>
-        <div className='bg-[#393E46] px-4 p-4'>
-          <div className='flex flex-row justify-between gap-12'>
-            <div className='flex flex-col'>
-              <p className='text-[#EEEEEE] text-lg font-medium'>{romaji}</p>
-              <p className='text-gray-400 text-sm font-normal'>{english}</p>
-              <p className='text-gray-400 text-sm font-normal line-clamp-3 pt-2'>
+        <div className="bg-[#393E46] px-4 p-4">
+          <div className="flex flex-row justify-between gap-12">
+            <div className="flex flex-col">
+              <p className="text-[#EEEEEE] text-lg font-medium">{romaji}</p>
+              <p className="text-gray-400 text-sm font-normal">{english}</p>
+              <p className="text-gray-400 text-sm font-normal line-clamp-3 pt-2">
                 {description}
               </p>
-              <div className='grid grid-cols-2 gap-1 mt-4'>
-                <div className='flex flex-row items-center gap-2'>
-                  <p className='text-zinc-400 text-sm font-normal'>Studios:</p>
-                  <div className='flex flex-row items-center'>
-                    <p className='text-gray-300 text-sm font-normal'>
-                      {seperatestudios}
+              <div className="grid grid-cols-2 gap-1 mt-4">
+                <div className="flex flex-row items-center gap-2">
+                  <p className="text-zinc-400 text-sm font-normal">Studios:</p>
+                  <div className="flex flex-row items-center">
+                    <p className="text-gray-300 text-sm font-normal">
+                      {/* {seperatestudios} */}
                     </p>
                   </div>
                 </div>
                 {AnimeDescriptions.map(({ dataname, datashown }) => (
-                  <div className='flex flex-row items-center gap-2'>
-                    <p className='text-zinc-400 text-sm font-normal'>
+                  <div className="flex flex-row items-center gap-2">
+                    <p className="text-zinc-400 text-sm font-normal">
                       {dataname}:
                     </p>
-                    <p className='text-gray-300 text-sm font-normal capitalize'>
+                    <p className="text-gray-300 text-sm font-normal capitalize">
                       {datashown}
                     </p>
                   </div>
                 ))}
-                <div className='flex flex-row items-center gap-2'>
-                  <p className='text-zinc-400 text-sm font-normal'>Genres:</p>
-                  <div className='flex flex-row items-center'>
-                    <p className='text-gray-300 text-sm font-normal'>
-                      {seperategenres}
+                <div className="flex flex-row items-center gap-2">
+                  <p className="text-zinc-400 text-sm font-normal">Genres:</p>
+                  <div className="flex flex-row items-center">
+                    <p className="text-gray-300 text-sm font-normal">
+                      {/* {seperategenres} */}
                     </p>
                   </div>
                 </div>
               </div>
             </div>
             <img
-              className='h-full w-full max-w-[14rem] max-h-[14rem] rounded-lg'
-              alt='animeImage'
+              className="h-full w-full max-w-[14rem] max-h-[14rem] rounded-lg"
+              alt="animeImage"
               src={image}
             />
           </div>
@@ -210,7 +207,7 @@ function WatchAnime() {
   return isLoading ? (
     <Loader />
   ) : (
-    <div className='min-h-screen bg-[#222831]'>
+    <div className="min-h-screen bg-[#222831]">
       <Navbar />
       {renderContainer()}
     </div>

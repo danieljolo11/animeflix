@@ -64,76 +64,35 @@ const AnimeShown = () => {
       ) : (
         <div className="lg:basis-[70%]">
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-            {data.map(
-              ({
-                image,
-                title: { userPreferred },
-                episodeNumber,
-                id,
-                episodeId,
-                rating,
-                genres,
-                type,
-                episodeTitle,
-              }) => {
-                const test = [...genres];
-                const splicedGenres = test.splice(0, 3);
-                return (
-                  <div
-                    key={id}
-                    className="group relative flex flex-col items-center overflow-hidden"
-                    onClick={() =>
-                      navigate("/watch", {
-                        state: {
-                          animeID: id,
-                          episodeId,
-                        },
-                      })
-                    }
-                  >
-                    <img
-                      className="h-44 w-40 rounded-md"
-                      alt="AnimeImage"
-                      src={image}
-                    />
-                    <span className="text-zinc-300 text-sm font-medium text-center line-clamp-2">
-                      {userPreferred}
-                    </span>
-                    <div className="absolute top-0 left-0 w-full h-full -rotate-x-90 origin-bottom transition-all group-hover:rotate-x-0 duration-700">
-                      <div className="flex flex-col justify-between bg-white/90 rounded-md gap-3 h-full w-auto z-20 p-5">
-                        <div className="flex flex-col gap-3">
-                          <div className="flex flex-row items-center justify-between">
-                            <span className="text-zinc-900 font-medium text-sm">
-                              Episode: {episodeNumber}
-                            </span>
-                            {rating && (
-                              <div className="flex flex-row items-center gap-1">
-                                <FiSmile />
-                                <span className="text-zinc-900 font-medium text-sm">
-                                  {rating}%
-                                </span>
-                              </div>
-                            )}
-                          </div>
-                          <div className="text-zinc-900 font-medium text-sm">
-                            {type}
-                          </div>
-                        </div>
-                        <div className="flex flex-col items-start gap-2">
-                          {splicedGenres.map((item) => {
-                            return (
-                              <div className="bg-[#008fb5] py-1 px-2 rounded-full text-xs text-white">
-                                {item}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }
-            )}
+            {console.log("data: ", data)}
+            {data.map(({ image, title, episodeNumber, id, episodeId }) => (
+              <div
+                key={id}
+                className="relative flex flex-col items-center overflow-hidden gap-2 cursor-pointer"
+                onClick={() =>
+                  navigate("/watch", {
+                    state: {
+                      animeID: id,
+                      episodeId,
+                    },
+                  })
+                }
+              >
+                <img
+                  className="h-44 w-40 rounded-md"
+                  alt="AnimeImage"
+                  src={image}
+                />
+                <div className="flex flex-col gap-1 h-full justify-between">
+                  <span className="text-zinc-300 text-sm font-medium text-center line-clamp-2">
+                    {title}
+                  </span>
+                  <span className="text-zinc-300 text-sm font-medium text-center line-clamp-2">
+                    Episode {episodeNumber}
+                  </span>
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       )}

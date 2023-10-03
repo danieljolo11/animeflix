@@ -1,8 +1,8 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { FiSearch } from 'react-icons/fi';
-import { useNavigate } from 'react-router-dom';
-import useAuth from './AuthProvider';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { FiSearch } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
+import useAuth from "./AuthProvider";
 
 export const Navbar = () => {
   const {
@@ -14,7 +14,7 @@ export const Navbar = () => {
   } = useAuth();
   const navigate = useNavigate();
   const [searchData, setSearchData] = useState([]);
-  const [searchForm, setSearchForm] = useState('');
+  const [searchForm, setSearchForm] = useState("");
   const [show, setShowNoResult] = useState(false);
 
   useEffect(() => {
@@ -25,7 +25,7 @@ export const Navbar = () => {
   }, [searchForm]);
 
   const getSearchResult = async () => {
-    const searchresulturl = `https://api-consumet-org-zeta.vercel.app/meta/anilist/${searchForm}`;
+    const searchresulturl = `https://api.consumet.org/anime/gogoanime/${searchForm}?page={1}`;
     await axios.get(searchresulturl).then(({ data, status }) => {
       if (status === 200) {
         const splicedata = data.documentation
@@ -55,63 +55,48 @@ export const Navbar = () => {
     return (
       <div
         className={`${
-          searchData ? 'max-h-[30rem]' : 'max-h-0'
+          searchData ? "max-h-[30rem]" : "max-h-0"
         } absolute top-8 bg-[#222831] transition-all duration-1000 rounded-b-md w-full md:w-[21.5rem] lg:w-[31.5rem] shadow-lg shadow-white/5 overflow-hidden z-50 px-2`}
       >
-        {data.map(
-          ({
-            id,
-            image,
-            title: { english, userPreferred },
-            releaseDate,
-            status,
-            type,
-          }) => {
-            return (
-              <div
-                key={id}
-                className='flex flex-row gap-2 py-2 mt-2 cursor-pointer'
-                onClick={() =>
-                  navigate('/watch', {
-                    state: {
-                      animeID: id,
-                      episodeId: null,
-                    },
-                  })
-                }
-              >
-                <img
-                  className='h-16 w-16'
-                  alt='searchImage'
-                  src={image ?? null}
-                />
-                <div className='flex flex-col justify-between'>
-                  <div className='flex flex-col'>
-                    <span className='text-zinc-200 text-sm font-normal line-clamp-1'>
-                      {userPreferred}
-                    </span>
-                    <span className='text-zinc-400 text-xs font-normal line-clamp-1'>
-                      {english}
-                    </span>
-                  </div>
-                  <div className='flex flex-row items-center gap-2'>
-                    <span className='text-zinc-400 text-xs font-normal'>
-                      {releaseDate}
-                    </span>
-                    <span className='text-zinc-400 text-xs font-normal'>
-                      {status}
-                    </span>
-                    <span className='text-zinc-400 text-xs font-normal'>
-                      {type}
-                    </span>
-                  </div>
+        {data.map(({ id, image, title, releaseDate, subOrDub }) => {
+          return (
+            <div
+              key={id}
+              className="flex flex-row gap-2 py-2 mt-2 cursor-pointer"
+              onClick={() =>
+                navigate("/watch", {
+                  state: {
+                    animeID: id,
+                    episodeId: null,
+                  },
+                })
+              }
+            >
+              <img
+                className="h-16 w-16"
+                alt="searchImage"
+                src={image ?? null}
+              />
+              <div className="flex flex-col justify-between">
+                <div className="flex flex-col">
+                  <span className="text-zinc-200 text-sm font-normal line-clamp-1">
+                    {title}
+                  </span>
+                  <span className="text-zinc-400 text-xs font-normal line-clamp-1 capitalize">
+                    {subOrDub}
+                  </span>
+                </div>
+                <div className="flex flex-row items-center gap-2">
+                  <span className="text-zinc-400 text-xs font-normal">
+                    {releaseDate}
+                  </span>
                 </div>
               </div>
-            );
-          }
-        )}
+            </div>
+          );
+        })}
         {data.length > 0 && (
-          <p className='text-center mt-2 mb-4 cursor-pointer text-sm font-medium text-zinc-200'>
+          <p className="text-center mt-2 mb-4 cursor-pointer text-sm font-medium text-zinc-200">
             View All
           </p>
         )}
@@ -123,10 +108,10 @@ export const Navbar = () => {
     return (
       <div
         className={`${
-          show ? 'max-h-[30rem]' : 'max-h-0'
+          show ? "max-h-[30rem]" : "max-h-0"
         } absolute top-8 bg-[#222831] transition-all duration-1000 rounded-b-md w-full md:w-[21.5rem] lg:w-[31.5rem] shadow-lg shadow-white/5 overflow-hidden z-50 px-2`}
       >
-        <p className='text-center mt-2 mb-4 cursor-pointer text-sm font-medium text-zinc-200'>
+        <p className="text-center mt-2 mb-4 cursor-pointer text-sm font-medium text-zinc-200">
           No Result
         </p>
       </div>
@@ -134,35 +119,35 @@ export const Navbar = () => {
   };
 
   return (
-    <div className='bg-[#393E46] h-16 flex items-center px-4'>
-      <div className='flex flex-row items-center gap-3 w-full'>
+    <div className="bg-[#393E46] h-16 flex items-center px-4">
+      <div className="flex flex-row items-center gap-3 w-full">
         <div
-          className='text-xl font-semibold text-[#EEEEEE] cursor-pointer'
+          className="text-xl font-semibold text-[#EEEEEE] cursor-pointer"
           onClick={() => {
             setSelectedGenre([]);
-            setSelectedYear('');
-            setSelectedSeason('');
-            setSelectedFormat('');
+            setSelectedYear("");
+            setSelectedSeason("");
+            setSelectedFormat("");
             setCurrentPageSearch(1);
-            navigate('/');
+            navigate("/");
           }}
         >
           Animeflix
         </div>
-        <div className='flex flex-row items-center relative w-full'>
-          <div className='bg-[#222831] py-2.5 rounded-l-md pl-2'>
-            <FiSearch className='text-zinc-300' />
+        <div className="flex flex-row items-center relative w-full">
+          <div className="bg-[#222831] py-2.5 rounded-l-md pl-2">
+            <FiSearch className="text-zinc-300" />
           </div>
           <input
-            type='text'
-            name='first-name'
-            id='first-name'
-            autoComplete='given-name'
-            className='searchinput'
-            placeholder='Search anime'
+            type="text"
+            name="first-name"
+            id="first-name"
+            autoComplete="given-name"
+            className="searchinput"
+            placeholder="Search anime"
             value={searchForm}
             onChange={(e) => setSearchForm(e.target.value)}
-            onBlur={() => setSearchForm('')}
+            onBlur={() => setSearchForm("")}
           />
           {renderShowSearchResult()}
           {renderNoResult()}

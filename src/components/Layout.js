@@ -15,7 +15,7 @@ function Layout() {
   ) : (
     <div className="min-h-screen bg-[#222831]">
       <Navbar />
-      <ListOfGenre />
+      {/* <ListOfGenre /> */}
       <Anime />
     </div>
   );

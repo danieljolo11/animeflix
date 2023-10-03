@@ -1,5 +1,5 @@
 // UAT
-const server = "https://api-consumet-org-zeta.vercel.app/";
+const server = "https://api.consumet.org";
 
 // localhost
 // const server = "http://192.168.1.49:5090/";
