@@ -35,9 +35,8 @@ export const AuthProvider = ({ children }) => {
   const getApiDatas = async () => {
     // API ROUTE
     const recenturl =
-      'https://api-consumet-org-zeta.vercel.app/meta/anilist/recent-episodes';
-    const topairurl =
-      'https://api-consumet-org-zeta.vercel.app/meta/anilist/trending';
+      "https://api.consumet.org/anime/gogoanime/recent-episodes";
+    const topairurl = "https://api.consumet.org/anime/gogoanime/top-airing";
 
     // API REQUEST
     const getRecentEpisode = axios.get(recenturl, {

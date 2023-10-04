@@ -10,39 +10,32 @@ function WatchAnime() {
 
   const [animeInfoData, setAnimeInfoData] = useState([]);
   const [serverData, setServerData] = useState([]);
-  const [nextEpisode, setNextEpisode] = useState('');
+  const [nextEpisode, setNextEpisode] = useState(episodeId);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     getApiDatas(); // eslint-disable-next-line
-  }, [nextEpisode, animeID, episodeId]);
+  }, [animeID]);
+
+  useEffect(() => {
+    getWatchServer(); // eslint-disable-next-line
+  }, [nextEpisode, episodeId]);
 
   const getApiDatas = async () => {
-    const animeInfoUrl = `https://api-consumet-org-zeta.vercel.app/meta/anilist/info/${animeID}`;
-    const getAnimeInfo = axios.get(animeInfoUrl, {
-      params: { provider: 'gogoanime' },
-    });
+    const animeInfoUrl = `https://api.consumet.org/anime/gogoanime/info/${animeID}`;
+    const { data, status } = await axios.get(animeInfoUrl);
 
-    const [animeInfoApi] = await Promise.allSettled([getAnimeInfo]);
-
-    const { data: info, status: infoStatus } = animeInfoApi.value;
-
-    setAnimeInfoData(infoStatus === 200 ? info : []);
-    getWatchServer(info);
+    setAnimeInfoData(status === 200 ? data : []);
+    if (nextEpisode === null) {
+      setNextEpisode(data.episodes[0]?.id);
+    }
   };
 
-  const getWatchServer = async (info) => {
-    const getlastData = info.episodes.slice(-1);
-    const defaultEpi = getlastData[0].id;
-    const currentepisode = nextEpisode ? nextEpisode : episodeId;
-
-    const serverUrl = `https://api-consumet-org-zeta.vercel.app/meta/anilist/watch/${
-      currentepisode !== null ? currentepisode : defaultEpi
-    }`;
+  const getWatchServer = async () => {
+    const serverUrl = `https://api.consumet.org/anime/gogoanime/watch/${nextEpisode}`;
     await axios
-      .get(serverUrl)
+      .get(serverUrl, { params: { server: "gogocdn" } })
       .then(({ data, status }) => {
-        console.log('yey');
         setServerData(status === 200 ? data : []);
       })
       .finally(() => {
@@ -54,29 +47,21 @@ function WatchAnime() {
     const { Referer } = serverData?.headers || [];
     const {
       image,
-      title: { english, romaji },
+      title,
+      otherName,
       description,
-      episodes,
-      currentEpisode,
       type,
       status,
       totalEpisodes,
-      startDate,
-      studios,
-      rating,
       genres,
-      popularity,
-      duration,
-      season,
+      subOrDub,
+      releaseDate,
+      episodes,
     } = animeInfoData;
 
     const AnimeDescriptions = [
       {
-        dataname: 'Popularity',
-        datashown: popularity.toLocaleString(),
-      },
-      {
-        dataname: 'Type',
+        dataname: "Type",
         datashown: type,
       },
       {
@@ -84,26 +69,20 @@ function WatchAnime() {
         datashown: status,
       },
       {
-        dataname: 'Episodes',
+        dataname: "Release Date",
+        datashown: releaseDate,
+      },
+      {
+        dataname: "Episodes",
         datashown: totalEpisodes,
       },
       {
-        dataname: 'Rating',
-        datashown: (rating / 10).toFixed(1),
-      },
-      {
-        dataname: 'Duration',
-        datashown: `${duration} mins`,
-      },
-      {
-        dataname: 'Season',
-        datashown: `${season} ${startDate?.year}`,
+        dataname: "Sub or Dub",
+        datashown: subOrDub,
       },
     ];
 
-    const seperategenres = genres.join(', ');
-    const seperatestudios = studios.join(', ');
-    console.log('Referer', Referer);
+    const seperategenres = genres?.join(", ");
 
     return (
       <div>
@@ -120,19 +99,15 @@ function WatchAnime() {
               src={Referer}
             />
           </div>
-          <div className='flex basis-[25%]'>
-            <div className='w-full'>
-              <p className='text-white bg-black/80 py-1.5 px-2'>Episodes</p>
-              <div className='flex flex-col overflow-auto bg-white/30 h-[34rem]'>
-                {episodes.map((items) => {
-                  const defaultEpisode = currentEpisode === items.number;
-                  const clickNext = nextEpisode === items.id;
-                  const getcurrentepisode = nextEpisode
-                    ? clickNext
-                    : defaultEpisode;
+          <div className="flex basis-[25%]">
+            <div className="w-full">
+              <p className="text-white bg-black/80 py-1.5 px-2">Episodes</p>
+              <div className="flex flex-col overflow-auto bg-white/30 h-[34rem]">
+                {episodes?.map((items) => {
+                  const getcurrentepisode = nextEpisode === items?.id;
                   return (
                     <div
-                      key={items.id}
+                      key={items?.id}
                       onClick={() => setNextEpisode(items.id)}
                       className={`${
                         getcurrentepisode ? 'bg-[#00ADB5]' : 'bg-transparent'
@@ -143,15 +118,8 @@ function WatchAnime() {
                           getcurrentepisode ? 'text-white' : 'text-zinc-900'
                         } text-base font-medium line-clamp-1`}
                       >
-                        {items?.number}.
+                        Episode {items?.number}
                       </span>
-                      <p
-                        className={`${
-                          getcurrentepisode ? 'text-white' : 'text-zinc-900'
-                        } text-base font-medium line-clamp-1`}
-                      >
-                        {items?.title}
-                      </p>
                     </div>
                   );
                 })}
@@ -159,26 +127,18 @@ function WatchAnime() {
             </div>
           </div>
         </div>
-        <div className='bg-[#393E46] px-4 p-4'>
-          <div className='flex flex-row justify-between gap-12'>
-            <div className='flex flex-col'>
-              <p className='text-[#EEEEEE] text-lg font-medium'>{romaji}</p>
-              <p className='text-gray-400 text-sm font-normal'>{english}</p>
-              <p className='text-gray-400 text-sm font-normal line-clamp-3 pt-2'>
+        <div className="bg-[#393E46] px-4 p-4">
+          <div className="flex flex-row justify-between gap-12">
+            <div className="flex flex-col">
+              <p className="text-[#EEEEEE] text-lg font-medium">{title}</p>
+              <p className="text-gray-400 text-sm font-normal">{otherName}</p>
+              <p className="text-gray-400 text-sm font-normal line-clamp-3 pt-2">
                 {description}
               </p>
-              <div className='grid grid-cols-2 gap-1 mt-4'>
-                <div className='flex flex-row items-center gap-2'>
-                  <p className='text-zinc-400 text-sm font-normal'>Studios:</p>
-                  <div className='flex flex-row items-center'>
-                    <p className='text-gray-300 text-sm font-normal'>
-                      {seperatestudios}
-                    </p>
-                  </div>
-                </div>
-                {AnimeDescriptions.map(({ dataname, datashown }) => (
-                  <div className='flex flex-row items-center gap-2'>
-                    <p className='text-zinc-400 text-sm font-normal'>
+              <div className="grid grid-cols-2 gap-1 mt-4">
+                {AnimeDescriptions?.map(({ dataname, datashown }) => (
+                  <div className="flex flex-row items-center gap-2">
+                    <p className="text-zinc-400 text-sm font-normal">
                       {dataname}:
                     </p>
                     <p className='text-gray-300 text-sm font-normal capitalize'>
@@ -186,10 +146,10 @@ function WatchAnime() {
                     </p>
                   </div>
                 ))}
-                <div className='flex flex-row items-center gap-2'>
-                  <p className='text-zinc-400 text-sm font-normal'>Genres:</p>
-                  <div className='flex flex-row items-center'>
-                    <p className='text-gray-300 text-sm font-normal'>
+                <div className="flex flex-row items-center gap-2">
+                  <p className="text-zinc-400 text-sm font-normal">Genres:</p>
+                  <div className="flex flex-row items-center">
+                    <p className="text-gray-300 text-sm font-normal">
                       {seperategenres}
                     </p>
                   </div>
