@@ -2,7 +2,7 @@ import React from "react";
 
 // Components
 import { Navbar } from "./Navbar";
-import { ListOfGenre } from "./Genres";
+// import { ListOfGenre } from "./Genres";
 import Anime from "./Anime";
 import useAuth from "./AuthProvider";
 import { Loader } from "./Loader";
@@ -15,7 +15,7 @@ function Layout() {
   ) : (
     <div className="min-h-screen bg-[#222831]">
       <Navbar />
-      <ListOfGenre />
+      {/* <ListOfGenre /> */}
       <Anime />
     </div>
   );
